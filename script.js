@@ -324,29 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Shooting Mode Easter Egg
-    const pipe = document.getElementById('paint-pipe');
-
     document.addEventListener('keydown', (e) => {
         if (e.shiftKey && e.key.toLowerCase() === 'g') {
             document.body.classList.toggle('shooting-mode');
-        }
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (document.body.classList.contains('shooting-mode')) {
-            // Aim pipe at cursor
-            // Pipe is at bottom right. Let's approximate its pivot point.
-            const pivotX = window.innerWidth;
-            const pivotY = window.innerHeight - 50;
-
-            const deltaX = e.clientX - pivotX;
-            const deltaY = e.clientY - pivotY;
-            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-
-            // Limit angle to prevent weird rotations
-            const clampedAngle = Math.max(160, Math.min(200, angle + 180)); // Adjust as needed
-
-            pipe.style.transform = `rotate(${angle}deg)`;
         }
     });
 
@@ -357,12 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
             app.classList.add('shake');
             setTimeout(() => {
                 app.classList.remove('shake');
-            }, 200);
-
-            // Pipe Recoil
-            pipe.classList.add('recoil');
-            setTimeout(() => {
-                pipe.classList.remove('recoil');
             }, 200);
 
             // Paint Splat spread
