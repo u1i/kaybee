@@ -1,0 +1,231 @@
+:root {
+    --bg-color: #f0f0f0;
+    --board-bg: #e0e0e0;
+    --column-bg: rgba(255, 255, 255, 0.5);
+    --text-color: #333;
+    --card-yellow: #ffeb3b;
+    --card-blue: #4fc3f7;
+    --card-green: #aed581;
+    --card-pink: #f06292;
+    --shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+header {
+    background: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+header h1 {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.controls button {
+    background: #333;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.controls button:hover {
+    transform: scale(1.1);
+}
+
+#board {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    padding: 20px;
+    gap: 20px;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.column {
+    min-width: 300px;
+    width: 300px;
+    background: var(--column-bg);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: fit-content;
+    max-height: 100%;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    cursor: grab;
+}
+
+.column-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: transparent;
+    border: none;
+    width: 100%;
+    cursor: text;
+}
+
+.add-card-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.add-card-btn:hover {
+    color: #333;
+}
+
+.card-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 50px;
+    /* Drop target area */
+    overflow-y: auto;
+}
+
+.card {
+    background-color: var(--card-yellow);
+    padding: 15px;
+    box-shadow: var(--shadow);
+    transform: rotate(-1deg);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: grab;
+    position: relative;
+    min-height: 100px;
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+body.font-readable .card {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.card:nth-child(2n) {
+    transform: rotate(1deg);
+}
+
+.card:hover {
+    transform: scale(1.02) rotate(0deg);
+    box-shadow: var(--shadow-hover);
+    z-index: 5;
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+.card-content {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    resize: none;
+    outline: none;
+}
+
+.card-controls {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    gap: 5px;
+}
+
+.card:hover .card-controls {
+    opacity: 1;
+}
+
+.color-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.trash-zone {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px dashed red;
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+    /* Show only when dragging */
+    color: red;
+    font-weight: bold;
+}
+
+.trash-zone.drag-over {
+    background: rgba(255, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.app-info {
+    text-align: center;
+    padding: 5px;
+    font-size: 0.8rem;
+    color: #666;
+    background: rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.app-info a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.app-info a:hover {
+    text-decoration: underline;
+}
