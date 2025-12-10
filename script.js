@@ -160,10 +160,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function addCard(columnId) {
         const column = data.columns.find(c => c.id === columnId);
         if (column) {
+            const colors = [
+                'var(--card-yellow)',
+                'var(--card-blue)',
+                'var(--card-green)',
+                'var(--card-pink)'
+            ];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
             const newCard = {
                 id: 'card-' + Date.now(),
                 text: 'New Card',
-                color: 'var(--card-yellow)'
+                color: randomColor
             };
             column.cards.push(newCard);
             saveData();
