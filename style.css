@@ -60,6 +60,10 @@ header h1 {
     color: #fff;
     border: none;
     height: 40px;
+    width: auto;
+    /* Ensure width is flexible */
+    min-width: 40px;
+    /* Minimum width for icon-only buttons if any */
     border-radius: 20px;
     font-size: 1rem;
     cursor: pointer;
@@ -68,6 +72,8 @@ header h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
+    /* Prevent text wrapping */
 }
 
 .controls button:hover {
@@ -76,6 +82,8 @@ header h1 {
 
 #add-column-btn {
     width: 40px;
+    min-width: 40px;
+    /* Force fixed width */
     padding: 0;
     border-radius: 50%;
     font-size: 1.5rem;
