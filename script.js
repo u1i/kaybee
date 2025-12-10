@@ -222,6 +222,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const downloadBtn = document.getElementById('download-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            let markdown = '# Kaybee Board Export\n\n';
+            data.columns.forEach(column => {
+                markdown += `## ${column.title}\n`;
+                if (column.cards.length === 0) {
+                    markdown += '(No cards)\n';
+                } else {
+                    column.cards.forEach(card => {
+                        markdown += `- ${card.text}\n`;
+                    });
+                }
+                markdown += '\n';
+            });
+
+            const blob = new Blob([markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kaybee-export-${new Date().toISOString().slice(0, 10)}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    }
+
     // Trash zone
     trashZone.addEventListener('dragover', e => {
         e.preventDefault();
