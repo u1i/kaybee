@@ -199,16 +199,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveCard(cardId, sourceColId, targetColId) {
-        const sourceCol = data.columns.find(c => c.id === sourceColId);
         const targetCol = data.columns.find(c => c.id === targetColId);
 
-        if (sourceCol && targetCol) {
-            const cardIndex = sourceCol.cards.findIndex(c => c.id === cardId);
-            if (cardIndex > -1) {
-                const [card] = sourceCol.cards.splice(cardIndex, 1);
-                targetCol.cards.push(card);
-                saveData();
-                renderBoard();
+        if (targetCol) {
+            const cardData = data.columns.flatMap(c => c.cards).find(c => c.id === cardId);
+            if (!cardData) return; // Card not found
+
+            // Remove from old column
+            data.columns.forEach(c => {
+                c.cards = c.cards.filter(card => card.id !== cardId);
+            });
+            // Add to new column
+            targetCol.cards.push(cardData);
+            saveData();
+            renderBoard();
+
+            // Trigger confetti if dropped in "Done" column
+            if (targetColId === 'col-3') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
             }
         }
     }
