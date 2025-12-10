@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load theme preference
     if (localStorage.getItem('kaybee-theme') === 'dark') {
         document.body.classList.add('dark-mode');
+        if (themeBtn) themeBtn.textContent = '☾';
+    } else {
+        if (themeBtn) themeBtn.textContent = '☀';
     }
 
     function saveData() {
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('kaybee-theme', isDark ? 'dark' : 'light');
+            themeBtn.textContent = isDark ? '☾' : '☀';
         });
     }
 

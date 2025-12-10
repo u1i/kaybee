@@ -145,6 +145,7 @@ header h1 {
     border: none;
     width: 100%;
     cursor: text;
+    color: var(--text-color);
 }
 
 .add-card-btn {
