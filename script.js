@@ -379,16 +379,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inspirational Quotes
     const quotes = [
-        "A place for everything, and everything in its place.",
-        "Clutter is nothing more than postponed decisions.",
-        "Organize your life, free your mind.",
-        "Simplicity is the ultimate sophistication.",
-        "The best way to get something done is to begin.",
-        "Order is the sanity of the mind.",
-        "Clear space, clear mind.",
-        "One task at a time.",
-        "Small steps lead to big changes.",
-        "Focus on being productive instead of busy."
+        "Agile is not just a fancy word.",
+        "Taking one step at a time.",
+        "Done is better than perfect.",
+        "Stop starting, start finishing.",
+        "Simplicity is the art of maximizing work not done.",
+        "Inspect and adapt.",
+        "Focus on value.",
+        "Continuous improvement is better than delayed perfection.",
+        "Responding to change over following a plan.",
+        "Working software is the primary measure of progress."
     ];
 
     const quoteDisplay = document.getElementById('quote-display');
