@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addColumnBtn = document.getElementById('add-column-btn');
     const trashZone = document.getElementById('trash-zone');
     const fontBtn = document.getElementById('font-btn');
+    const themeBtn = document.getElementById('theme-btn');
 
     let data = {
         columns: [
@@ -23,6 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('font-readable');
     }
 
+    // Load theme preference
+    if (localStorage.getItem('kaybee-theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
     function saveData() {
         localStorage.setItem('kaybee-data', JSON.stringify(data));
     }
@@ -33,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.toggle('font-readable');
             const isReadable = document.body.classList.contains('font-readable');
             localStorage.setItem('kaybee-font', isReadable ? 'readable' : 'handwritten');
+        });
+    }
+
+    // Theme switcher
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('kaybee-theme', isDark ? 'dark' : 'light');
         });
     }
 

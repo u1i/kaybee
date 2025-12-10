@@ -3,12 +3,23 @@
     --board-bg: #e0e0e0;
     --column-bg: rgba(255, 255, 255, 0.5);
     --text-color: #333;
+    --header-bg: #fff;
     --card-yellow: #ffeb3b;
     --card-blue: #4fc3f7;
     --card-green: #aed581;
     --card-pink: #f06292;
     --shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     --shadow-hover: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --board-bg: #2d2d2d;
+    --column-bg: rgba(255, 255, 255, 0.1);
+    --text-color: #f0f0f0;
+    --header-bg: #2d2d2d;
+    --shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 5px 5px 15px rgba(0, 0, 0, 0.7);
 }
 
 * {
@@ -34,19 +45,20 @@ body {
 }
 
 header {
-    background: #fff;
+    background: var(--header-bg);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     z-index: 10;
+    transition: background-color 0.2s;
 }
 
 header h1 {
     font-family: 'Reenie Beanie', cursive;
     font-size: 2.5rem;
-    color: #333;
+    color: var(--text-color);
 }
 
 .controls {
@@ -56,8 +68,8 @@ header h1 {
 }
 
 .controls button {
-    background: #333;
-    color: #fff;
+    background: var(--text-color);
+    color: var(--bg-color);
     border: none;
     height: 40px;
     width: auto;
