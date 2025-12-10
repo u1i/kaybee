@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `kaybee-export-${new Date().toISOString().slice(0, 10)}.md`;
+            a.download = `kaybee_${Date.now()}.md`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
