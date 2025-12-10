@@ -323,5 +323,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Shooting Mode Easter Egg
+    document.addEventListener('keydown', (e) => {
+        if (e.shiftKey && e.key.toLowerCase() === 'g') {
+            document.body.classList.toggle('shooting-mode');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (document.body.classList.contains('shooting-mode')) {
+            const hole = document.createElement('div');
+            hole.className = 'bullet-hole';
+            hole.style.left = e.pageX + 'px';
+            hole.style.top = e.pageY + 'px';
+            document.body.appendChild(hole);
+
+            // Play sound effect (optional, but requested "shoot holes")
+            // Using a very short, synthesized "pop" could be fun, but for now just visual.
+
+            // Remove after animation
+            setTimeout(() => {
+                hole.remove();
+            }, 3500);
+        }
+    });
+
     renderBoard();
 });

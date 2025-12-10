@@ -288,3 +288,32 @@ body.font-readable .card {
 .app-info a:hover {
     text-decoration: underline;
 }
+
+/* Shooting Mode Easter Egg */
+body.shooting-mode {
+    cursor: crosshair !important;
+}
+
+body.shooting-mode * {
+    cursor: crosshair !important;
+}
+
+.bullet-hole {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #000 40%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+    animation: fadeOut 0.5s ease-out 3s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2);
+    }
+}
