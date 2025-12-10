@@ -82,18 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Drag and Drop for cards (simplified for now, using HTML5 DnD)
-        cardList.addEventListener('dragover', e => {
+        colDiv.addEventListener('dragover', e => {
             e.preventDefault();
-            cardList.classList.add('drag-over');
+            colDiv.classList.add('drag-over');
         });
 
-        cardList.addEventListener('dragleave', () => {
-            cardList.classList.remove('drag-over');
+        colDiv.addEventListener('dragleave', () => {
+            colDiv.classList.remove('drag-over');
         });
 
-        cardList.addEventListener('drop', e => {
+        colDiv.addEventListener('drop', e => {
             e.preventDefault();
-            cardList.classList.remove('drag-over');
+            colDiv.classList.remove('drag-over');
             const cardId = e.dataTransfer.getData('text/plain');
             const sourceColId = e.dataTransfer.getData('source-col-id');
 
