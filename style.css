@@ -291,24 +291,52 @@ body.font-readable .card {
 
 /* Shooting Mode Easter Egg */
 body.shooting-mode {
-    cursor: crosshair !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🔫</text></svg>") 16 0, auto !important;
 }
 
 body.shooting-mode * {
-    cursor: crosshair !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🔫</text></svg>") 16 0, auto !important;
 }
 
 .bullet-hole {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     background: radial-gradient(circle, #000 40%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
     animation: fadeOut 0.5s ease-out 3s forwards;
+}
+
+.shake {
+    animation: shake 0.2s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
 
 @keyframes fadeOut {

@@ -332,19 +332,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         if (document.body.classList.contains('shooting-mode')) {
-            const hole = document.createElement('div');
-            hole.className = 'bullet-hole';
-            hole.style.left = e.pageX + 'px';
-            hole.style.top = e.pageY + 'px';
-            document.body.appendChild(hole);
-
-            // Play sound effect (optional, but requested "shoot holes")
-            // Using a very short, synthesized "pop" could be fun, but for now just visual.
-
-            // Remove after animation
+            // Recoil effect
+            const app = document.getElementById('app');
+            app.classList.add('shake');
             setTimeout(() => {
-                hole.remove();
-            }, 3500);
+                app.classList.remove('shake');
+            }, 200);
+
+            // Shotgun spread (5-8 pellets)
+            const pelletCount = Math.floor(Math.random() * 4) + 5;
+
+            for (let i = 0; i < pelletCount; i++) {
+                const hole = document.createElement('div');
+                hole.className = 'bullet-hole';
+
+                // Random spread within 30px radius
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 30;
+                const offsetX = Math.cos(angle) * radius;
+                const offsetY = Math.sin(angle) * radius;
+
+                hole.style.left = (e.pageX + offsetX) + 'px';
+                hole.style.top = (e.pageY + offsetY) + 'px';
+
+                // Random size variation
+                const size = Math.random() * 4 + 4; // 4px to 8px
+                hole.style.width = size + 'px';
+                hole.style.height = size + 'px';
+
+                document.body.appendChild(hole);
+
+                // Remove after animation
+                setTimeout(() => {
+                    hole.remove();
+                }, 3500);
+            }
         }
     });
 
