@@ -291,11 +291,46 @@ body.font-readable .card {
 
 /* Shooting Mode Easter Egg */
 body.shooting-mode {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🔫</text></svg>") 16 0, auto !important;
+    cursor: crosshair !important;
 }
 
 body.shooting-mode * {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🔫</text></svg>") 16 0, auto !important;
+    cursor: crosshair !important;
+}
+
+.doom-shotgun {
+    position: fixed;
+    bottom: -20px;
+    left: 50%;
+    width: 300px;
+    height: 225px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10000;
+    display: none;
+    transition: transform 0.1s ease-out;
+}
+
+body.shooting-mode .doom-shotgun {
+    display: block;
+}
+
+.doom-shotgun.recoil {
+    animation: gunRecoil 0.2s ease-out;
+}
+
+@keyframes gunRecoil {
+    0% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    20% {
+        transform: translateX(-50%) translateY(40px) scale(0.95);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 .bullet-hole {

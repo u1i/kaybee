@@ -324,19 +324,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Shooting Mode Easter Egg
+    const shotgun = document.getElementById('doom-shotgun');
+
     document.addEventListener('keydown', (e) => {
         if (e.shiftKey && e.key.toLowerCase() === 'g') {
             document.body.classList.toggle('shooting-mode');
         }
     });
 
+    document.addEventListener('mousemove', (e) => {
+        if (document.body.classList.contains('shooting-mode')) {
+            // Move gun to follow mouse horizontally
+            // We use left: e.pageX, but we need to account for the transform: translateX(-50%) in CSS
+            // which centers it on that point.
+            shotgun.style.left = e.clientX + 'px';
+        }
+    });
+
     document.addEventListener('click', (e) => {
         if (document.body.classList.contains('shooting-mode')) {
-            // Recoil effect
+            // Screen Shake
             const app = document.getElementById('app');
             app.classList.add('shake');
             setTimeout(() => {
                 app.classList.remove('shake');
+            }, 200);
+
+            // Gun Recoil
+            shotgun.classList.add('recoil');
+            setTimeout(() => {
+                shotgun.classList.remove('recoil');
             }, 200);
 
             // Shotgun spread (5-8 pellets)
