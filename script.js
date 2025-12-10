@@ -377,5 +377,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Inspirational Quotes
+    const quotes = [
+        "A place for everything, and everything in its place.",
+        "Clutter is nothing more than postponed decisions.",
+        "Organize your life, free your mind.",
+        "Simplicity is the ultimate sophistication.",
+        "The best way to get something done is to begin.",
+        "Order is the sanity of the mind.",
+        "Clear space, clear mind.",
+        "One task at a time.",
+        "Small steps lead to big changes.",
+        "Focus on being productive instead of busy."
+    ];
+
+    const quoteDisplay = document.getElementById('quote-display');
+    if (quoteDisplay) {
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteDisplay.textContent = randomQuote;
+    }
+
     renderBoard();
 });
