@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="column-header">
                 <input type="text" class="column-title" value="${column.title}">
                 <button class="add-card-btn" title="Add Card">+</button>
+                <button class="delete-column-btn" title="Delete Column">×</button>
             </div>
             <div class="card-list"></div>
         `;
@@ -66,6 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const addCardBtn = colDiv.querySelector('.add-card-btn');
         addCardBtn.addEventListener('click', () => {
             addCard(column.id);
+        });
+
+        const deleteColumnBtn = colDiv.querySelector('.delete-column-btn');
+        deleteColumnBtn.addEventListener('click', () => {
+            if (confirm('Delete this column and all its cards?')) {
+                deleteColumn(column.id);
+            }
         });
 
         const cardList = colDiv.querySelector('.card-list');
@@ -236,6 +244,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveData();
                 renderBoard();
             }
+        }
+    }
+
+    function deleteColumn(columnId) {
+        const columnIndex = data.columns.findIndex(c => c.id === columnId);
+        if (columnIndex > -1) {
+            data.columns.splice(columnIndex, 1);
+            saveData();
+            renderBoard();
         }
     }
 
