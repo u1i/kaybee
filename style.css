@@ -3,6 +3,7 @@
     --board-bg: #e0e0e0;
     --column-bg: rgba(255, 255, 255, 0.5);
     --text-color: #333;
+    --card-text-color: #333;
     --header-bg: #fff;
     --card-yellow: #ffeb3b;
     --card-blue: #4fc3f7;
@@ -196,6 +197,7 @@ header h1 {
     font-family: 'Reenie Beanie', cursive;
     font-size: 1.5rem;
     line-height: 1.2;
+    color: var(--card-text-color);
 }
 
 body.font-readable .card {
