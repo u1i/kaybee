@@ -49,20 +49,36 @@ header h1 {
     color: #333;
 }
 
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .controls button {
     background: #333;
     color: #fff;
     border: none;
-    width: 40px;
     height: 40px;
-    border-radius: 50%;
-    font-size: 1.5rem;
+    border-radius: 20px;
+    font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .controls button:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+#add-column-btn {
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.5rem;
 }
 
 #board {
