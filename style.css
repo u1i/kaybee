@@ -298,51 +298,52 @@ body.shooting-mode * {
     cursor: crosshair !important;
 }
 
-.doom-shotgun {
+.paint-pipe {
     position: fixed;
-    bottom: -20px;
-    left: 50%;
+    bottom: 0;
+    right: -50px;
     width: 300px;
-    height: 225px;
-    transform: translateX(-50%);
+    height: 100px;
     pointer-events: none;
     z-index: 10000;
     display: none;
-    transition: transform 0.1s ease-out;
+    transform-origin: 100% 50%;
+    /* Pivot from right */
+    transition: transform 0.05s linear;
 }
 
-body.shooting-mode .doom-shotgun {
+body.shooting-mode .paint-pipe {
     display: block;
 }
 
-.doom-shotgun.recoil {
-    animation: gunRecoil 0.2s ease-out;
+.paint-pipe.recoil {
+    animation: pipeRecoil 0.2s ease-out;
 }
 
-@keyframes gunRecoil {
+@keyframes pipeRecoil {
     0% {
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(0);
     }
 
     20% {
-        transform: translateX(-50%) translateY(40px) scale(0.95);
+        transform: translateX(50px);
     }
 
     100% {
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(0);
     }
 }
 
-.bullet-hole {
+.paint-splat {
     position: absolute;
-    width: 6px;
-    height: 6px;
-    background: radial-gradient(circle, #000 40%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
-    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    border-radius: 50% 60% 50% 70% / 60% 50% 70% 60%;
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+    box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.2);
     animation: fadeOut 0.5s ease-out 3s forwards;
 }
 

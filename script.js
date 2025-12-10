@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Shooting Mode Easter Egg
-    const shotgun = document.getElementById('doom-shotgun');
+    const pipe = document.getElementById('paint-pipe');
 
     document.addEventListener('keydown', (e) => {
         if (e.shiftKey && e.key.toLowerCase() === 'g') {
@@ -334,10 +334,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mousemove', (e) => {
         if (document.body.classList.contains('shooting-mode')) {
-            // Move gun to follow mouse horizontally
-            // We use left: e.pageX, but we need to account for the transform: translateX(-50%) in CSS
-            // which centers it on that point.
-            shotgun.style.left = e.clientX + 'px';
+            // Aim pipe at cursor
+            // Pipe is at bottom right. Let's approximate its pivot point.
+            const pivotX = window.innerWidth;
+            const pivotY = window.innerHeight - 50;
+
+            const deltaX = e.clientX - pivotX;
+            const deltaY = e.clientY - pivotY;
+            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+
+            // Limit angle to prevent weird rotations
+            const clampedAngle = Math.max(160, Math.min(200, angle + 180)); // Adjust as needed
+
+            pipe.style.transform = `rotate(${angle}deg)`;
         }
     });
 
@@ -350,38 +359,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 app.classList.remove('shake');
             }, 200);
 
-            // Gun Recoil
-            shotgun.classList.add('recoil');
+            // Pipe Recoil
+            pipe.classList.add('recoil');
             setTimeout(() => {
-                shotgun.classList.remove('recoil');
+                pipe.classList.remove('recoil');
             }, 200);
 
-            // Shotgun spread (5-8 pellets)
-            const pelletCount = Math.floor(Math.random() * 4) + 5;
+            // Paint Splat spread
+            const splatCount = Math.floor(Math.random() * 3) + 3;
 
-            for (let i = 0; i < pelletCount; i++) {
-                const hole = document.createElement('div');
-                hole.className = 'bullet-hole';
+            for (let i = 0; i < splatCount; i++) {
+                const splat = document.createElement('div');
+                splat.className = 'paint-splat';
 
-                // Random spread within 30px radius
+                // Random spread
                 const angle = Math.random() * Math.PI * 2;
-                const radius = Math.random() * 30;
+                const radius = Math.random() * 40;
                 const offsetX = Math.cos(angle) * radius;
                 const offsetY = Math.sin(angle) * radius;
 
-                hole.style.left = (e.pageX + offsetX) + 'px';
-                hole.style.top = (e.pageY + offsetY) + 'px';
+                splat.style.left = (e.pageX + offsetX) + 'px';
+                splat.style.top = (e.pageY + offsetY) + 'px';
 
-                // Random size variation
-                const size = Math.random() * 4 + 4; // 4px to 8px
-                hole.style.width = size + 'px';
-                hole.style.height = size + 'px';
+                // Random size and shape variation
+                const size = Math.random() * 10 + 10;
+                splat.style.width = size + 'px';
+                splat.style.height = size + 'px';
 
-                document.body.appendChild(hole);
+                // Randomize border radius for blob shape
+                const r1 = Math.floor(Math.random() * 40) + 30;
+                const r2 = Math.floor(Math.random() * 40) + 30;
+                const r3 = Math.floor(Math.random() * 40) + 30;
+                const r4 = Math.floor(Math.random() * 40) + 30;
+                splat.style.borderRadius = `${r1}% ${r2}% ${r3}% ${r4}%`;
+
+                document.body.appendChild(splat);
 
                 // Remove after animation
                 setTimeout(() => {
-                    hole.remove();
+                    splat.remove();
                 }, 3500);
             }
         }
