@@ -118,8 +118,41 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.hash = nextId;
         });
 
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-board-btn';
+        deleteBtn.textContent = '×';
+        deleteBtn.title = 'Delete Current Board';
+        deleteBtn.addEventListener('click', () => {
+            if (confirm(`Are you sure you want to delete "${boardsMeta.find(b => b.id === currentBoardId)?.name}"? This action cannot be undone.`)) {
+                deleteCurrentBoard();
+            }
+        });
+
         container.appendChild(select);
         container.appendChild(addBtn);
+        // Only show delete if it's not the last board, or handle the reset case
+        container.appendChild(deleteBtn);
+    }
+
+    function deleteCurrentBoard() {
+        // Remove data
+        localStorage.removeItem(`kaybee-board-${currentBoardId}`);
+
+        // Update meta
+        const index = boardsMeta.findIndex(b => b.id === currentBoardId);
+        if (index > -1) {
+            boardsMeta.splice(index, 1);
+            saveMeta();
+        }
+
+        // Redirect
+        if (boardsMeta.length > 0) {
+            window.location.hash = boardsMeta[0].id;
+        } else {
+            // Deleted last board, reset to #1
+            window.location.hash = '1';
+            location.reload(); // Force full reload to init #1
+        }
     }
 
     // Start
