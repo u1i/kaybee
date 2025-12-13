@@ -5,6 +5,8 @@ Kaybee is a lightweight, standalone Kanban board that runs entirely in your brow
 ## Features
 
 - **Multi-Board Support**: Manage multiple boards within the same app using the Board Switcher or direct links (e.g., `/#1`, `/#2`).
+- **Focus Mode**: Click the colorful dots in the header to filter cards by color and focus on specific topics.
+- **Board Deletion**: Easily remove boards you no longer need.
 - **Headless & Offline**: No backend server or database required. All data is stored locally in your browser (LocalStorage).
 - **Drag & Drop**: Easily move cards between columns and organize your board.
 - **Customizable**: Add as many columns as you need.
@@ -16,11 +18,13 @@ Kaybee is a lightweight, standalone Kanban board that runs entirely in your brow
 
 1.  **Open**: Double-click `index.html` or visit the deployed site.
 2.  **Manage Boards**: Use the dropdown next to the logo to switch boards. Click `+` to create a new board.
-3.  **Add Columns**: Use the `+` button in the header (right side) to create new columns.
-4.  **Add Cards**: Click the `+` inside any column to add a task card.
-5.  **Edit**: Click on card text to edit. Click color dots to change card color.
-6.  **Delete**: Drag a card to the trash zone in the bottom right corner to remove it.
-7.  **Reset**: Use the "Reset" button to clear the *current* board and start fresh.
+3.  **Delete Boards**: Click the red `×` button next to the switcher to delete the current board (with confirmation).
+4.  **Focus Mode**: Click the small color dots in the header (e.g., Blue) to fade out all other cards. Click again to reset.
+5.  **Add Columns**: Use the `+` button in the header (right side) to create new columns.
+6.  **Add Cards**: Click the `+` inside any column to add a task card.
+7.  **Edit**: Click on card text to edit. Click color dots to change card color.
+8.  **Delete Cards**: Drag a card to the trash zone in the bottom right corner to remove it.
+9.  **Reset**: Use the "Reset" button to clear the *current* board and start fresh.
 
 ## Easter Egg
 
