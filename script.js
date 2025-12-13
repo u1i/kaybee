@@ -157,12 +157,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    let activeFilterColor = null;
+
+    function toggleFilter(color) {
+        if (activeFilterColor === activeFilterColor && activeFilterColor === color) {
+            activeFilterColor = null; // Toggle off
+        } else {
+            activeFilterColor = color; // Set new filter
+        }
+        applyFilter();
+    }
+
+    function applyFilter() {
+        const dots = document.querySelectorAll('.filter-dot');
+
+        // Update UI state of dots
+        dots.forEach(dot => {
+            if (dot.dataset.color === activeFilterColor) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+
+        // Update Board State
+        if (activeFilterColor) {
+            board.classList.add('board-filtering');
+        } else {
+            board.classList.remove('board-filtering');
+        }
+
+        // Update Cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            if (activeFilterColor && card.style.backgroundColor === activeFilterColor) {
+                card.classList.add('filter-match');
+            } else {
+                card.classList.remove('filter-match');
+            }
+        });
+    }
+
+    // Filter Listeners
+    document.querySelectorAll('.filter-dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+            toggleFilter(dot.dataset.color);
+        });
+    });
+
     function renderBoard() {
         board.innerHTML = '';
         data.columns.forEach(column => {
             const colEl = createColumnElement(column);
             board.appendChild(colEl);
         });
+        // Re-apply filter if active (needed because we just cleared the board)
+        if (activeFilterColor) {
+            applyFilter();
+        }
     }
 
     function createColumnElement(column) {
