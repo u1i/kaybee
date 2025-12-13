@@ -324,8 +324,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Shooting Mode Easter Egg
+    // Shooting Mode Easter Egg
     document.addEventListener('keydown', (e) => {
-        if (e.shiftKey && e.key.toLowerCase() === 'g') {
+        // Prevent trigger while typing in inputs
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) {
+            return;
+        }
+
+        // Obscure hotkey: Ctrl + Alt + Shift + G
+        if (e.ctrlKey && e.altKey && e.shiftKey && e.code === 'KeyG') {
             document.body.classList.toggle('shooting-mode');
         }
     });
