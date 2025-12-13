@@ -126,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
     // Load font preference
+    if (localStorage.getItem('kaybee-font') === 'readable') {
+        document.body.classList.add('font-readable');
+    }
+
+    // Load theme preference
+    if (localStorage.getItem('kaybee-theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeBtn) themeBtn.textContent = '☾';
+    } else {
+        if (themeBtn) themeBtn.textContent = '☀';
+    }
 
     // Font switcher
     if (fontBtn) {
