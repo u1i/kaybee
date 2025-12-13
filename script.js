@@ -5,36 +5,127 @@ document.addEventListener('DOMContentLoaded', () => {
     const fontBtn = document.getElementById('font-btn');
     const themeBtn = document.getElementById('theme-btn');
 
-    let data = {
-        columns: [
-            { id: 'col-1', title: 'To Do', cards: [] },
-            { id: 'col-2', title: 'Doing', cards: [] },
-            { id: 'col-3', title: 'Done', cards: [] }
-        ]
-    };
+    let currentBoardId = '1';
+    let boardsMeta = JSON.parse(localStorage.getItem('kaybee-boards-meta') || '[]');
 
-    // Load from local storage
-    const savedData = localStorage.getItem('kaybee-data');
-    if (savedData) {
-        data = JSON.parse(savedData);
+    // Initialize/Migrate
+    function init() {
+        // Handle URL Hash
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            currentBoardId = hash;
+        } else {
+            window.location.hash = '1';
+            currentBoardId = '1';
+        }
+
+        // Migration: If board 1 is empty but legacy data exists
+        if (currentBoardId === '1' && !localStorage.getItem('kaybee-board-1')) {
+            const legacyData = localStorage.getItem('kaybee-data');
+            if (legacyData) {
+                localStorage.setItem('kaybee-board-1', legacyData);
+                localStorage.removeItem('kaybee-data'); // Clean up
+            }
+        }
+
+        // Initialize Meta if empty
+        if (boardsMeta.length === 0) {
+            boardsMeta = [{ id: '1', name: 'Board 1' }];
+            saveMeta();
+        } else {
+            // Ensure current board exists in meta
+            if (!boardsMeta.find(b => b.id === currentBoardId)) {
+                boardsMeta.push({ id: currentBoardId, name: `Board ${currentBoardId}` });
+                saveMeta();
+            }
+        }
+
+        loadBoardData();
+        renderBoardSwitcher();
     }
 
-    // Load font preference
-    if (localStorage.getItem('kaybee-font') === 'readable') {
-        document.body.classList.add('font-readable');
-    }
-
-    // Load theme preference
-    if (localStorage.getItem('kaybee-theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (themeBtn) themeBtn.textContent = '☾';
-    } else {
-        if (themeBtn) themeBtn.textContent = '☀';
+    function loadBoardData() {
+        const savedData = localStorage.getItem(`kaybee-board-${currentBoardId}`);
+        if (savedData) {
+            data = JSON.parse(savedData);
+        } else {
+            // Default empty board structure
+            data = {
+                columns: [
+                    { id: 'col-1', title: 'To Do', cards: [] },
+                    { id: 'col-2', title: 'Doing', cards: [] },
+                    { id: 'col-3', title: 'Done', cards: [] }
+                ]
+            };
+            saveData();
+        }
     }
 
     function saveData() {
-        localStorage.setItem('kaybee-data', JSON.stringify(data));
+        localStorage.setItem(`kaybee-board-${currentBoardId}`, JSON.stringify(data));
     }
+
+    function saveMeta() {
+        localStorage.setItem('kaybee-boards-meta', JSON.stringify(boardsMeta));
+    }
+
+    // Hash Change Listener
+    window.addEventListener('hashchange', () => {
+        const newHash = window.location.hash.substring(1);
+        if (newHash && newHash !== currentBoardId) {
+            currentBoardId = newHash;
+            // Ensure exists in meta
+            if (!boardsMeta.find(b => b.id === currentBoardId)) {
+                boardsMeta.push({ id: currentBoardId, name: `Board ${currentBoardId}` });
+                saveMeta();
+            }
+            loadBoardData();
+            renderBoard(); // Re-render main board
+            renderBoardSwitcher(); // Re-render switcher to update active state
+        }
+    });
+
+    function renderBoardSwitcher() {
+        const container = document.getElementById('board-switcher');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        // Dropdown/Select approach for simplicity
+        const select = document.createElement('select');
+        select.className = 'board-select';
+
+        boardsMeta.forEach(b => {
+            const option = document.createElement('option');
+            option.value = b.id;
+            option.textContent = b.name; // Could implement renaming later
+            if (b.id === currentBoardId) option.selected = true;
+            select.appendChild(option);
+        });
+
+        select.addEventListener('change', (e) => {
+            window.location.hash = e.target.value;
+        });
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-board-btn';
+        addBtn.textContent = '+';
+        addBtn.title = 'New Board';
+        addBtn.addEventListener('click', () => {
+            // Find next available ID
+            const ids = boardsMeta.map(b => parseInt(b.id)).sort((a, b) => a - b);
+            const nextId = (ids[ids.length - 1] || 0) + 1;
+            window.location.hash = nextId;
+        });
+
+        container.appendChild(select);
+        container.appendChild(addBtn);
+    }
+
+    // Start
+    init();
+
+    // Load font preference
 
     // Font switcher
     if (fontBtn) {

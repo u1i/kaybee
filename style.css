@@ -56,10 +56,51 @@ header {
     transition: background-color 0.3s;
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .app-logo {
     height: 40px;
     width: auto;
-    vertical-align: middle;
+}
+
+.board-switcher {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.board-select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.add-board-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--text-color);
+    color: var(--bg-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.add-board-btn:hover {
+    transform: scale(1.1);
 }
 
 .quote-display {
