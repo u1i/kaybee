@@ -125,17 +125,6 @@ header {
     transform: scale(1.1);
 }
 
-.quote-display {
-    flex-grow: 1;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.2rem;
-    color: var(--text-color);
-    opacity: 0.8;
-    padding: 0 1rem;
-    font-weight: 400;
-}
-
 h1 {
     margin: 0;
     /* font-family: 'Reenie Beanie', cursive; */

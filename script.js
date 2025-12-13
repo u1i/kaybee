@@ -571,25 +571,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Inspirational Quotes
-    const quotes = [
-        "Agile is not just a fancy word.",
-        "Taking one step at a time.",
-        "Done is better than perfect.",
-        "Stop starting, start finishing.",
-        "Simplicity is the art of maximizing work not done.",
-        "Inspect and adapt.",
-        "Focus on value.",
-        "Continuous improvement is better than delayed perfection.",
-        "Responding to change over following a plan.",
-        "Working software is the primary measure of progress."
-    ];
-
-    const quoteDisplay = document.getElementById('quote-display');
-    if (quoteDisplay) {
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-        quoteDisplay.textContent = randomQuote;
-    }
+    // Filter Listeners
+    document.querySelectorAll('.filter-dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+            toggleFilter(dot.dataset.color);
+        });
+    });
 
     renderBoard();
 });
