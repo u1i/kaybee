@@ -24,7 +24,7 @@ Kaybee is a lightweight, standalone Kanban board that runs entirely in your brow
 
 ## Easter Egg
 
-- **Invisible Shooter Mode**: Press `Cmd + Shift + K` (Mac) or `Ctrl + Shift + K` (Windows) to activate. Click specifically to paint the town green! (Note: Disabled while typing in text credentials).
+- **Invisible Shooter Mode**: Press `Cmd + Shift + K` (Mac) or `Ctrl + Shift + K` (Windows) to activate. Click specifically to paint the town green! (Note: Disabled while editing cards or columns).
 
 ## Privacy
 
