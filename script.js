@@ -331,8 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Obscure hotkey: Ctrl + Alt + Shift + G
-        if (e.ctrlKey && e.altKey && e.shiftKey && e.code === 'KeyG') {
+        // Universal hotkey: Cmd/Ctrl + Shift + K
+        if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.code === 'KeyK') {
             document.body.classList.toggle('shooting-mode');
         }
     });
