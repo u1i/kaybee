@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const APP_VERSION = 'v1.1.0';
+    console.log('Kaybee Loaded:', APP_VERSION);
+
     const board = document.getElementById('board');
     const addColumnBtn = document.getElementById('add-column-btn');
     const trashZone = document.getElementById('trash-zone');
