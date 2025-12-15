@@ -1,6 +1,53 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const APP_VERSION = 'v1.2.0';
+    const APP_VERSION = 'v1.2.2-nuclear';
     console.log('Kaybee Loaded:', APP_VERSION);
+
+    // GLOBAL ERROR TRAP - For diagnosing silent failures in file://
+    window.onerror = function (msg, url, line, col, error) {
+        alert(`CRITICAL ERROR:\n${msg}\nLine: ${line}\nURL: ${url}`);
+        return false;
+    };
+
+    // Safe Storage Wrapper
+    const safeStorage = {
+        _memory: {},
+        _isAvailable: null,
+
+        isAvailable() {
+            if (this._isAvailable !== null) return this._isAvailable;
+            try {
+                const test = '__storage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                this._isAvailable = true;
+            } catch (e) {
+                console.warn('localStorage access denied/failed. Falling back to memory.', e);
+                this._isAvailable = false;
+            }
+            return this._isAvailable;
+        },
+
+        getItem(key) {
+            if (this.isAvailable()) return localStorage.getItem(key);
+            return this._memory[key] || null;
+        },
+
+        setItem(key, value) {
+            if (this.isAvailable()) {
+                localStorage.setItem(key, value);
+            } else {
+                this._memory[key] = value;
+            }
+        },
+
+        removeItem(key) {
+            if (this.isAvailable()) {
+                localStorage.removeItem(key);
+            } else {
+                delete this._memory[key];
+            }
+        }
+    };
 
     const board = document.getElementById('board');
     const addColumnBtn = document.getElementById('add-column-btn');
@@ -9,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.getElementById('theme-btn');
 
     let currentBoardId = '1';
-    let boardsMeta = JSON.parse(localStorage.getItem('kaybee-boards-meta') || '[]');
+    // Use safeStorage instead of direct localStorage
+    let boardsMeta = JSON.parse(safeStorage.getItem('kaybee-boards-meta') || '[]');
 
     // Initialize/Migrate
     function init() {
@@ -23,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Migration: If board 1 is empty but legacy data exists
-        if (currentBoardId === '1' && !localStorage.getItem('kaybee-board-1')) {
-            const legacyData = localStorage.getItem('kaybee-data');
+        if (currentBoardId === '1' && !safeStorage.getItem('kaybee-board-1')) {
+            const legacyData = safeStorage.getItem('kaybee-data');
             if (legacyData) {
-                localStorage.setItem('kaybee-board-1', legacyData);
-                localStorage.removeItem('kaybee-data'); // Clean up
+                safeStorage.setItem('kaybee-board-1', legacyData);
+                safeStorage.removeItem('kaybee-data'); // Clean up
             }
         }
 
@@ -48,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadBoardData() {
-        const savedData = localStorage.getItem(`kaybee-board-${currentBoardId}`);
+        const savedData = safeStorage.getItem(`kaybee-board-${currentBoardId}`);
         if (savedData) {
             data = JSON.parse(savedData);
         } else {
@@ -65,11 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveData() {
-        localStorage.setItem(`kaybee-board-${currentBoardId}`, JSON.stringify(data));
+        safeStorage.setItem(`kaybee-board-${currentBoardId}`, JSON.stringify(data));
     }
 
     function saveMeta() {
-        localStorage.setItem('kaybee-boards-meta', JSON.stringify(boardsMeta));
+        safeStorage.setItem('kaybee-boards-meta', JSON.stringify(boardsMeta));
     }
 
     // Hash Change Listener
@@ -139,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function deleteCurrentBoard() {
         // Remove data
-        localStorage.removeItem(`kaybee-board-${currentBoardId}`);
+        safeStorage.removeItem(`kaybee-board-${currentBoardId}`);
 
         // Update meta
         const index = boardsMeta.findIndex(b => b.id === currentBoardId);
@@ -162,12 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
     // Load font preference
-    if (localStorage.getItem('kaybee-font') === 'readable') {
+    if (safeStorage.getItem('kaybee-font') === 'readable') {
         document.body.classList.add('font-readable');
     }
 
     // Load theme preference
-    if (localStorage.getItem('kaybee-theme') === 'dark') {
+    if (safeStorage.getItem('kaybee-theme') === 'dark') {
         document.body.classList.add('dark-mode');
         if (themeBtn) themeBtn.textContent = '☾';
     } else {
@@ -179,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fontBtn.addEventListener('click', () => {
             document.body.classList.toggle('font-readable');
             const isReadable = document.body.classList.contains('font-readable');
-            localStorage.setItem('kaybee-font', isReadable ? 'readable' : 'handwritten');
+            safeStorage.setItem('kaybee-font', isReadable ? 'readable' : 'handwritten');
         });
     }
 
@@ -188,23 +236,29 @@ document.addEventListener('DOMContentLoaded', () => {
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('kaybee-theme', isDark ? 'dark' : 'light');
+            safeStorage.setItem('kaybee-theme', isDark ? 'dark' : 'light');
             themeBtn.textContent = isDark ? '☾' : '☀';
         });
     }
 
     let activeFilterColor = null;
 
-    function toggleFilter(color) {
+    // Expose for inline onclick to bypass listener attachment issues
+    window.toggleFilter = function (color) {
+        // alert('Debug: Toggle Filter Clicked: ' + color); // Uncomment if desperate
+        console.log('toggleFilter called with:', color);
         if (activeFilterColor === activeFilterColor && activeFilterColor === color) {
             activeFilterColor = null; // Toggle off
+            console.log('Filter deactivated');
         } else {
             activeFilterColor = color; // Set new filter
+            console.log('Filter activated for:', activeFilterColor);
         }
         applyFilter();
     }
 
     function applyFilter() {
+        console.log('applyFilter running. Active:', activeFilterColor);
         const dots = document.querySelectorAll('.filter-dot');
 
         // Update UI state of dots
@@ -217,20 +271,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Update Board State
+        const liveBoard = document.getElementById('board'); // Re-query purely for safety
         if (activeFilterColor) {
-            board.classList.add('board-filtering');
+            liveBoard.classList.add('board-filtering');
+            console.log('Class board-filtering added to LIVE board', liveBoard.className);
         } else {
-            board.classList.remove('board-filtering');
+            liveBoard.classList.remove('board-filtering');
+            console.log('Class board-filtering removed from LIVE board', liveBoard.className);
         }
 
-        // Update Cards
+        // Helper to normalize color strings (handles both 'yellow' and 'var(--card-yellow)')
+        function normalizeColor(color) {
+            if (!color) return '';
+            // Strip 'var(--card-' and ')'
+            return color.replace('var(--card-', '').replace(')', '').trim();
+        }
+
+        // Update Cards - NUCLEAR OPTION (Direct Style Manipulation)
         const cards = document.querySelectorAll('.card');
+        console.log(`Checking ${cards.length} cards...`);
         cards.forEach(card => {
-            // Check dataset.color instead of style.backgroundColor for reliability
-            if (activeFilterColor && card.dataset.color === activeFilterColor) {
-                card.classList.add('filter-match');
+            const cardColor = card.dataset.color;
+            const isMatch = (cardColor === activeFilterColor) ||
+                (normalizeColor(cardColor) === normalizeColor(activeFilterColor));
+
+            console.log(`Card ${card.dataset.id} color: ${cardColor} | Active: ${activeFilterColor} | Match: ${isMatch}`);
+
+            if (activeFilterColor) {
+                // Filtering IS active
+                if (isMatch) {
+                    card.style.opacity = '1';
+                    card.style.filter = 'none';
+                    card.style.pointerEvents = 'auto'; // Ensure clickable
+                } else {
+                    card.style.opacity = '0.1';
+                    card.style.filter = 'grayscale(100%)';
+                    card.style.pointerEvents = 'none'; // Prevent clicks
+                }
             } else {
-                card.classList.remove('filter-match');
+                // Filtering is OFF - Reset to CSS defaults
+                card.style.opacity = '';
+                card.style.filter = '';
+                card.style.pointerEvents = '';
             }
         });
     }
@@ -315,17 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return colDiv;
     }
 
-    const COLOR_MAP = {
-        'yellow': 'var(--card-yellow)',
-        'blue': 'var(--card-blue)',
-        'green': 'var(--card-green)',
-        'pink': 'var(--card-pink)'
-    };
-
-    // Reverse map for lookup if needed (helper)
-    function getSimpleColorKey(cssVar) {
-        return Object.keys(COLOR_MAP).find(key => COLOR_MAP[key] === cssVar) || 'yellow';
-    }
+    // const COLOR_MAP = { ... }; // REMOVED: Using raw strings as per original working version
+    // function getSimpleColorKey(cssVar) { ... } // REMOVED
 
     function createCardElement(card) {
         const cardDiv = document.createElement('div');
@@ -333,20 +406,19 @@ document.addEventListener('DOMContentLoaded', () => {
         cardDiv.draggable = true;
         cardDiv.dataset.id = card.id;
 
-        // Ensure legacy cards match the map
+        // Use raw color directly (e.g. 'var(--card-yellow)')
         const cssColor = card.color || 'var(--card-yellow)';
-        const simpleColor = getSimpleColorKey(cssColor);
 
-        cardDiv.dataset.color = simpleColor;
+        cardDiv.dataset.color = cssColor;
         cardDiv.style.backgroundColor = cssColor;
 
         cardDiv.innerHTML = `
             <div class="card-content" contenteditable="true">${card.text}</div>
             <div class="card-controls">
-                <div class="color-dot" style="background: var(--card-yellow)" data-color="yellow"></div>
-                <div class="color-dot" style="background: var(--card-blue)" data-color="blue"></div>
-                <div class="color-dot" style="background: var(--card-green)" data-color="green"></div>
-                <div class="color-dot" style="background: var(--card-pink)" data-color="pink"></div>
+                <div class="color-dot" style="background: var(--card-yellow)" data-color="var(--card-yellow)"></div>
+                <div class="color-dot" style="background: var(--card-blue)" data-color="var(--card-blue)"></div>
+                <div class="color-dot" style="background: var(--card-green)" data-color="var(--card-green)"></div>
+                <div class="color-dot" style="background: var(--card-pink)" data-color="var(--card-pink)"></div>
             </div>
         `;
 
@@ -360,13 +432,12 @@ document.addEventListener('DOMContentLoaded', () => {
         cardDiv.querySelectorAll('.color-dot').forEach(dot => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent drag start
-                const simpleKey = dot.dataset.color; // 'yellow', 'blue' etc
-                const cssVar = COLOR_MAP[simpleKey];
+                const cssVar = dot.dataset.color; // RAW string: 'var(--card-yellow)'
 
                 cardDiv.style.backgroundColor = cssVar;
-                cardDiv.dataset.color = simpleKey; // sync dataset with simple key
+                cardDiv.dataset.color = cssVar;
 
-                card.color = cssVar; // Store full var() logic for persistence
+                card.color = cssVar;
                 saveData();
 
                 // Re-apply filter if active to immediately hide/show if color changed
@@ -392,10 +463,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return cardDiv;
     }
 
+
     function addCard(columnId) {
         const column = data.columns.find(c => c.id === columnId);
         if (column) {
-            const colors = Object.values(COLOR_MAP);
+            // Raw strings
+            const colors = [
+                'var(--card-yellow)',
+                'var(--card-blue)',
+                'var(--card-green)',
+                'var(--card-pink)'
+            ];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
             const newCard = {
