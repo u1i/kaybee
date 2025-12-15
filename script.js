@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const APP_VERSION = 'v1.1.0';
+    const APP_VERSION = 'v1.2.0';
     console.log('Kaybee Loaded:', APP_VERSION);
 
     const board = document.getElementById('board');
@@ -315,23 +315,38 @@ document.addEventListener('DOMContentLoaded', () => {
         return colDiv;
     }
 
+    const COLOR_MAP = {
+        'yellow': 'var(--card-yellow)',
+        'blue': 'var(--card-blue)',
+        'green': 'var(--card-green)',
+        'pink': 'var(--card-pink)'
+    };
+
+    // Reverse map for lookup if needed (helper)
+    function getSimpleColorKey(cssVar) {
+        return Object.keys(COLOR_MAP).find(key => COLOR_MAP[key] === cssVar) || 'yellow';
+    }
+
     function createCardElement(card) {
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card';
         cardDiv.draggable = true;
         cardDiv.dataset.id = card.id;
-        // Use dataset for reliable filtering vs style.backgroundColor
-        const color = card.color || 'var(--card-yellow)';
-        cardDiv.dataset.color = color;
-        cardDiv.style.backgroundColor = color;
+
+        // Ensure legacy cards match the map
+        const cssColor = card.color || 'var(--card-yellow)';
+        const simpleColor = getSimpleColorKey(cssColor);
+
+        cardDiv.dataset.color = simpleColor;
+        cardDiv.style.backgroundColor = cssColor;
 
         cardDiv.innerHTML = `
             <div class="card-content" contenteditable="true">${card.text}</div>
             <div class="card-controls">
-                <div class="color-dot" style="background: var(--card-yellow)" data-color="var(--card-yellow)"></div>
-                <div class="color-dot" style="background: var(--card-blue)" data-color="var(--card-blue)"></div>
-                <div class="color-dot" style="background: var(--card-green)" data-color="var(--card-green)"></div>
-                <div class="color-dot" style="background: var(--card-pink)" data-color="var(--card-pink)"></div>
+                <div class="color-dot" style="background: var(--card-yellow)" data-color="yellow"></div>
+                <div class="color-dot" style="background: var(--card-blue)" data-color="blue"></div>
+                <div class="color-dot" style="background: var(--card-green)" data-color="green"></div>
+                <div class="color-dot" style="background: var(--card-pink)" data-color="pink"></div>
             </div>
         `;
 
@@ -345,10 +360,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cardDiv.querySelectorAll('.color-dot').forEach(dot => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent drag start
-                const color = dot.dataset.color;
-                cardDiv.style.backgroundColor = color;
-                cardDiv.dataset.color = color; // sync dataset
-                card.color = color;
+                const simpleKey = dot.dataset.color; // 'yellow', 'blue' etc
+                const cssVar = COLOR_MAP[simpleKey];
+
+                cardDiv.style.backgroundColor = cssVar;
+                cardDiv.dataset.color = simpleKey; // sync dataset with simple key
+
+                card.color = cssVar; // Store full var() logic for persistence
                 saveData();
 
                 // Re-apply filter if active to immediately hide/show if color changed
@@ -377,12 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addCard(columnId) {
         const column = data.columns.find(c => c.id === columnId);
         if (column) {
-            const colors = [
-                'var(--card-yellow)',
-                'var(--card-blue)',
-                'var(--card-green)',
-                'var(--card-pink)'
-            ];
+            const colors = Object.values(COLOR_MAP);
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
             const newCard = {
