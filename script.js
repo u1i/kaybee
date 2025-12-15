@@ -223,7 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Cards
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            if (activeFilterColor && card.style.backgroundColor === activeFilterColor) {
+            // Check dataset.color instead of style.backgroundColor for reliability
+            if (activeFilterColor && card.dataset.color === activeFilterColor) {
                 card.classList.add('filter-match');
             } else {
                 card.classList.remove('filter-match');
@@ -316,7 +317,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cardDiv.className = 'card';
         cardDiv.draggable = true;
         cardDiv.dataset.id = card.id;
-        cardDiv.style.backgroundColor = card.color || 'var(--card-yellow)';
+        // Use dataset for reliable filtering vs style.backgroundColor
+        const color = card.color || 'var(--card-yellow)';
+        cardDiv.dataset.color = color;
+        cardDiv.style.backgroundColor = color;
 
         cardDiv.innerHTML = `
             <div class="card-content" contenteditable="true">${card.text}</div>
@@ -340,8 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation(); // Prevent drag start
                 const color = dot.dataset.color;
                 cardDiv.style.backgroundColor = color;
+                cardDiv.dataset.color = color; // sync dataset
                 card.color = color;
                 saveData();
+
+                // Re-apply filter if active to immediately hide/show if color changed
+                if (activeFilterColor) applyFilter();
             });
         });
 
